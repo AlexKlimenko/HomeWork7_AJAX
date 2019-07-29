@@ -1,8 +1,8 @@
 //UI
-const userlist = document.querySelector(".userlist");
+const userContainer = document.querySelector(".userlist");
 const usersHead = document.createElement("h4");
 usersHead.textContent = "USERS";
-userlist.appendChild(usersHead);
+userContainer.appendChild(usersHead);
 
 const form = document.forms["addUser"];
 const inputName = form.elements["name"];
@@ -11,6 +11,9 @@ const inputUserName = form.elements["userName"];
 const inputPhone = form.elements["phone"];
 const inputWebsite = form.elements["website"];
 const addBtn = document.querySelector("button");
+
+const userList = document.createElement("ol");
+userList.classList.add("list-group");
 
 //Functions
 function getUsers(method, url, cb) {
@@ -27,77 +30,109 @@ function getUsers(method, url, cb) {
 }
 
 getUsers("GET", "https://jsonplaceholder.typicode.com/users", res => {
-  console.log(res);
   renderUsers(res);
 });
 
+userContainer.addEventListener("click", e => {
+  const { target } = e;
+  target.classList.toggle("active");
+});
+
 function renderUsers(users) {
-  const ol = document.createElement("ol");
   users.forEach(user => {
-    const li = document.createElement("li");
-    li.textContent = user.name;
-    li.setAttribute("data-toggle", "collapse");
-    li.setAttribute("data-target", `#user_${user.id}`);
-    li.setAttribute("aria-expanded", "true");
-
-    const collapse = document.createElement("div");
-    collapse.classList.add("collapse");
-    collapse.setAttribute("id", `user_${user.id}`);
-
-    const collapseCard = document.createElement("div");
-    collapseCard.classList.add("card", "card-body", "p-1");
-
-    const userListTitle = document.createElement("h6");
-    userListTitle.classList.add("card-title", "mb-1");
-    userListTitle.textContent = "User info";
-
-    const infoUserName = document.createElement("p");
-    infoUserName.classList.add("card-subtitle", "text-muted", "user-name");
-    infoUserName.textContent = `Username: ${user.username}`;
-    const infoEmail = document.createElement("p");
-    infoEmail.classList.add("card-subtitle", "text-muted", "user-email");
-    infoEmail.textContent = `Email: ${user.email}`;
-    const infoPhone = document.createElement("p");
-    infoPhone.classList.add("card-subtitle", "text-muted", "user-phone");
-    infoPhone.textContent = `Phone: ${user.phone}`;
-    const infoWebsite = document.createElement("p");
-    infoWebsite.classList.add("card-subtitle", "text-muted", "user-website");
-    infoWebsite.textContent = `Website: ${user.website}`;
-
-    collapseCard.appendChild(userListTitle);
-    collapseCard.appendChild(infoUserName);
-    collapseCard.appendChild(infoEmail);
-    collapseCard.appendChild(infoPhone);
-    collapseCard.appendChild(infoWebsite);
-
-    collapse.appendChild(collapseCard);
-
-    ol.appendChild(li);
-    ol.appendChild(collapse);
+    let li = listUserTemplate(user);
   });
 
-  userlist.appendChild(ol);
+  return userList;
 }
 
-{
-  /* 
-<li data-toggle="collapse" data-target="#hide" aria-expanded="true">Fukin`Collapse</li>
+function listUserTemplate(user) {
+  let li = document.createElement("li");
+  li.textContent = user.name;
+  li.setAttribute("data-toggle", "collapse");
+  li.setAttribute("data-target", `#user_${user.id}`);
+  li.setAttribute("aria-expanded", "true");
+  li.classList.add("list-group-item", "list-group-item-action");
 
-<div class="user-info collapse" id="hide">
-  <div class="card card-body">
-    <h6 class="card-title mb-1">User info</h4>
-      <p class="card-subtitle text-muted user-name">Username</p>
-      <p class="card-subtitle text-muted user-email">Email</p>
-      <p class="card-subtitle text-muted user-phone">Phone</p>
-      <p class="card-subtitle text-muted user-website">Website</p>
-  </div>
-</div>
-*/
+  const collapse = document.createElement("div");
+  collapse.classList.add("collapse");
+  collapse.setAttribute("id", `user_${user.id}`);
+
+  const collapseCard = document.createElement("div");
+  collapseCard.classList.add("card", "card-body", "p-1");
+
+  const userListTitle = document.createElement("h6");
+  userListTitle.classList.add("card-title", "mb-1");
+  userListTitle.textContent = "User info";
+
+  const infoUserName = document.createElement("p");
+  infoUserName.classList.add("card-subtitle", "text-muted", "user-name");
+  infoUserName.textContent = `Username: ${user.username}`;
+  const infoEmail = document.createElement("p");
+  infoEmail.classList.add("card-subtitle", "text-muted", "user-email");
+  infoEmail.textContent = `Email: ${user.email}`;
+  const infoPhone = document.createElement("p");
+  infoPhone.classList.add("card-subtitle", "text-muted", "user-phone");
+  infoPhone.textContent = `Phone: ${user.phone}`;
+  const infoWebsite = document.createElement("p");
+  infoWebsite.classList.add("card-subtitle", "text-muted", "user-website");
+  infoWebsite.textContent = `Website: ${user.website}`;
+
+  collapseCard.appendChild(userListTitle);
+  collapseCard.appendChild(infoUserName);
+  collapseCard.appendChild(infoEmail);
+  collapseCard.appendChild(infoPhone);
+  collapseCard.appendChild(infoWebsite);
+
+  collapse.appendChild(collapseCard);
+
+  userList.appendChild(li);
+  userList.appendChild(collapse);
+
+  userContainer.appendChild(userList);
 }
 
-// function addUser()
+form.addEventListener("submit", onSubmitHandler);
 
-function postUser(method, url, body, cb) {
+function onSubmitHandler(e) {
+  e.preventDefault();
+  const nameValue = inputName.value;
+  const emailValue = inputEmail.value;
+  const userNameValue = inputUserName.value;
+  const phoneValue = inputPhone.value;
+  const websiteValue = inputWebsite.value;
+
+  if (
+    !nameValue ||
+    !emailValue ||
+    !userNameValue ||
+    !phoneValue ||
+    !websiteValue
+  ) {
+    alert(`Enter all user data`);
+    return;
+  }
+
+  let newUser = {
+    name: `${nameValue}`,
+    email: `${nameValue}`,
+    username: `${userNameValue}`,
+    phone: `${phoneValue}`,
+    website: `${websiteValue}`
+  };
+
+  postUser(
+    "POST",
+    "https://jsonplaceholder.typicode.com/users",
+    newUser,
+    res => {
+      listUserTemplate(res);
+    }
+  );
+  form.reset();
+}
+
+function postUser(method, url, newUser, cb) {
   const xhr = new XMLHttpRequest();
 
   xhr.open(method, url);
@@ -106,5 +141,5 @@ function postUser(method, url, body, cb) {
     const resBody = JSON.parse(xhr.responseText);
     cb(resBody);
   });
-  xhr.send(JSON.stringify(body));
+  xhr.send(JSON.stringify(newUser));
 }
