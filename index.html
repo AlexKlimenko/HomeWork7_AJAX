@@ -9,39 +9,41 @@
 </head>
 
 <body>
-  <div class="div-list-section mt-5 ml-5">
+
+  <div class="container userlist">
+    
+  </div>
+
+  </div>
+  <div class="form-section mt-5">
     <div class="container">
-      <p class="lead d-flex mb-1">USERS</p>
-      <ul class="list-group">
+      <div class="row">
+        <div class="col col-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Add new user</h5>
+              <form name="addUser">
+                <input type="text" name="name" id="name" class="form-control" placeholder="Name">
+                <input type="email" name="userEmail" id="userEmail" class="form-control" placeholder="Email">
+                <input type="text" name="userName" id="userName" class="form-control" placeholder="Username">
+                <input type="number" name="phone" id="phone" class="form-control" placeholder="Phone">
+                <input type="url" name="website" id="website" class="form-control" placeholder="Website">
+                <button type="submit" class="btn btn-primary mt-3">Add user</button>
+              </form>
 
-      </ul>
-    </div>
-    <div class="form-section mt-5">
-      <div class="container">
-        <div class="row">
-          <div class="col col-6">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">Add new user</h5>
-                <form name="addUser">
-                  <input type="text" name="name" id="name" class="form-control" placeholder="Name">
-                  <input type="email" name="userEmail" id="userEmail" class="form-control" placeholder="Email">
-                  <input type="text" name="userName" id="userName" class="form-control" placeholder="Username">
-                  <input type="text" name="userName" id="userName" class="form-control" placeholder="Username">
-                </form>
-
-              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
   </div>
 
 
 
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   <script src="app.js"></script>
 </body>
 
